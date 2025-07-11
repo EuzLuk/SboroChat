@@ -3,142 +3,182 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Primo Facebook - Minimal</title>
+<title>SboroChat💦</title>
+
 <style>
   body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  max-width: 600px;
-  margin: 30px auto;
-  background-color: #f9f9f9; /* bianco perla chiaro */
-  color: #333;
-}
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    max-width: 600px;
+    margin: 30px auto;
+    background-color: #f9f9f9;
+    color: #333;
+  }
 
-h1 {
-  text-align: center;
-  color: #00bfff; /* celeste chiaro */
-  font-weight: 700;
-  letter-spacing: 2px;
-  margin-bottom: 30px;
-  text-transform: uppercase;
-  text-shadow: 0 0 5px #00bfff;
-}
+  h1 {
+    text-align: center;
+    color: #00bfff;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    text-shadow: 0 0 5px #00bfff;
+  }
 
-form {
-  margin-bottom: 25px;
-  background: #fff; /* bianco perla */
-  border: 2px solid #a8d0ff; /* celeste chiaro */
-  border-radius: 10px;
-  padding: 15px 20px;
-  box-shadow: 0 0 15px rgba(0, 191, 255, 0.2);
-}
+  form {
+    margin-bottom: 25px;
+    background: #fff;
+    border: 2px solid #a8d0ff;
+    border-radius: 10px;
+    padding: 15px 20px;
+    box-shadow: 0 0 15px rgba(0, 191, 255, 0.2);
+  }
 
-input, textarea, button {
-  padding: 10px;
-  margin-top: 8px;
-  width: 100%;
-  border-radius: 5px;
-  border: 1.5px solid #a8d0ff; /* celeste chiaro */
-  font-size: 1rem;
-  font-weight: 500;
-  color: #333;
-  background-color: #fff;
-  transition: border-color 0.3s ease;
-}
+  input, textarea, button {
+    padding: 10px;
+    margin-top: 8px;
+    width: 100%;
+    border-radius: 5px;
+    border: 1.5px solid #a8d0ff;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #333;
+    background-color: #fff;
+    transition: border-color 0.3s ease;
+  }
 
-input:focus, textarea:focus {
-  outline: none;
-  border-color: #00bfff;
-  box-shadow: 0 0 8px #00bfff;
-}
+  input:focus, textarea:focus {
+    outline: none;
+    border-color: #00bfff;
+    box-shadow: 0 0 8px #00bfff;
+  }
 
-button {
-  cursor: pointer;
-  background-color: #00bfff;
-  color: #fff;
-  font-weight: 700;
-  border: none;
-  transition: background-color 0.3s ease;
-}
+  button {
+    cursor: pointer;
+    background-color: #00bfff;
+    color: #fff;
+    font-weight: 700;
+    border: none;
+    transition: background-color 0.3s ease;
+  }
 
-button:hover {
-  background-color: #008fcc;
-}
+  button:hover {
+    background-color: #008fcc;
+  }
 
-#posts {
-  border-top: 2px solid #a8d0ff;
-  padding-top: 25px;
-}
+  .error {
+    color: #d9534f;
+    font-weight: 600;
+    margin-top: 8px;
+  }
 
-.post {
-  border-bottom: 1.5px solid #a8d0ff;
-  margin-bottom: 18px;
-  padding-bottom: 12px;
-  background-color: #fefefe; /* quasi bianco */
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 191, 255, 0.1);
-}
+  .success {
+    color: #5cb85c;
+    font-weight: 600;
+    margin-top: 8px;
+  }
 
-.post strong {
-  color: #00bfff; /* nomi utenti in celeste chiaro */
-  font-weight: 700;
-}
+  #logoutBtn {
+    display: none;
+    margin-bottom: 25px;
+    background-color: #00bfff;
+    border-radius: 8px;
+    font-weight: 700;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
 
-.post em {
-  color: #666;
-  font-size: 0.85rem;
-  margin-left: 8px;
-}
+  #logoutBtn:hover {
+    background-color: #008fcc;
+  }
 
-.post p {
-  color: #222; /* testo post grigio scuro quasi nero */
-  margin-top: 6px;
-  font-size: 1rem;
-  line-height: 1.4;
-}
+  #registerForm {
+    display: none;
+  }
 
-.error {
-  color: #d9534f;
-  font-weight: 600;
-  margin-top: 8px;
-}
+  #showRegisterBtn {
+    margin-top: -10px;
+    margin-bottom: 20px;
+    background: none;
+    border: none;
+    color: #00bfff;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: underline;
+  }
 
-.success {
-  color: #5cb85c;
-  font-weight: 600;
-  margin-top: 8px;
-}
+  #showRegisterBtn:hover {
+    color: #008fcc;
+  }
 
-#logoutBtn {
-  display: none;
-  margin-bottom: 25px;
-  background-color: #00bfff;
-  border-radius: 8px;
-  font-weight: 700;
-  color: white;
-  padding: 10px;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
+  #postSection {
+    position: relative;
+    background-image: url('https://www.ilsussidiario.net/wp-content/uploads/2023/04/30/gianni_sperti_2023_verissimo.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 10px;
+    padding: 15px;
+    color: white;
+    overflow: hidden;
+    display: none;
+  }
 
-#logoutBtn:hover {
-  background-color: #008fcc;
-}
+  #postSection::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 0;
+    border-radius: 10px;
+  }
 
+  #postSection > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  .post {
+    border-bottom: 1.5px solid #a8d0ff;
+    margin-bottom: 18px;
+    padding-bottom: 12px;
+    background-color: #fefefe;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 191, 255, 0.1);
+  }
+
+  .post strong {
+    color: #00bfff;
+    font-weight: 700;
+  }
+
+  .post em {
+    color: #666;
+    font-size: 0.85rem;
+    margin-left: 8px;
+  }
+
+  .post p {
+    color: #222;
+    margin-top: 6px;
+    font-size: 1rem;
+    line-height: 1.4;
+  }
 </style>
 </head>
+
 <body>
-  <h1>Primo Facebook Minimal</h1>
+  <h1>SboroChat💦</h1>
+
+  <div style="text-align:center; margin-bottom:20px;">
+    <img src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQQnymsoaTGhsu_fKcZMoRH14iVqqXUubdpupMHS__7ciTiiR80vB0lzkZpnjDgDZQpAG5RxEz-Q0JWJpForum8jg" 
+         alt="immagine decorativa" 
+         style="max-width:100%; height:auto; border-radius:8px; box-shadow:0 0 10px rgba(0,0,0,0.2);">
+  </div>
 
   <div id="auth">
-    <form id="registerForm">
-      <h2>Registrati</h2>
-      <input type="text" id="regUsername" placeholder="Username" required />
-      <input type="password" id="regPassword" placeholder="Password" required />
-      <button type="submit">Registrati</button>
-      <div id="regMessage"></div>
-    </form>
-
     <form id="loginForm">
       <h2>Login</h2>
       <input type="text" id="loginUsername" placeholder="Username" required />
@@ -146,14 +186,24 @@ button:hover {
       <button type="submit">Login</button>
       <div id="loginMessage"></div>
     </form>
+
+    <button id="showRegisterBtn">Registrati</button>
+
+    <form id="registerForm">
+      <h2>Registrazione</h2>
+      <input type="text" id="regUsername" placeholder="Username" required />
+      <input type="password" id="regPassword" placeholder="Password" required />
+      <button type="submit">Conferma registrazione</button>
+      <div id="regMessage"></div>
+    </form>
   </div>
 
   <button id="logoutBtn">Logout</button>
 
-  <div id="postSection" style="display:none;">
+  <div id="postSection">
     <form id="postForm">
       <h2>Crea un post</h2>
-      <textarea id="postText" placeholder="Scrivi qualcosa..." rows="3" required style="width:100%;"></textarea>
+      <textarea id="postText" placeholder="Scrivi qualcosa..." rows="3" required></textarea>
       <button type="submit">Pubblica</button>
       <div id="postMessage"></div>
     </form>
@@ -165,14 +215,24 @@ button:hover {
 <script>
   let currentUser = null;
 
-  // Helper funzioni per mostrare messaggi
   function showMessage(elementId, message, isError = false) {
     const el = document.getElementById(elementId);
     el.textContent = message;
     el.className = isError ? 'error' : 'success';
   }
 
-  // Register
+  document.getElementById('showRegisterBtn').addEventListener('click', () => {
+    const regForm = document.getElementById('registerForm');
+    const btn = document.getElementById('showRegisterBtn');
+    if (regForm.style.display === 'block') {
+      regForm.style.display = 'none';
+      btn.textContent = 'Registrati';
+    } else {
+      regForm.style.display = 'block';
+      btn.textContent = 'Chiudi registrazione';
+    }
+  });
+
   document.getElementById('registerForm').addEventListener('submit', async e => {
     e.preventDefault();
     const username = document.getElementById('regUsername').value.trim();
@@ -188,13 +248,17 @@ button:hover {
 
     if (res.ok) {
       showMessage('regMessage', 'Registrazione riuscita! Ora puoi fare login.');
+      document.getElementById('loginUsername').value = username;
+      document.getElementById('loginPassword').value = password;
+      document.getElementById('registerForm').style.display = 'none';
+      document.getElementById('showRegisterBtn').textContent = 'Registrati';
       document.getElementById('registerForm').reset();
+      showMessage('loginMessage', 'Ora fai login con i dati precompilati.');
     } else {
       showMessage('regMessage', data.message || 'Errore nella registrazione', true);
     }
   });
 
-  // Login
   document.getElementById('loginForm').addEventListener('submit', async e => {
     e.preventDefault();
     const username = document.getElementById('loginUsername').value.trim();
@@ -221,7 +285,6 @@ button:hover {
     }
   });
 
-  // Logout
   document.getElementById('logoutBtn').addEventListener('click', () => {
     currentUser = null;
     document.getElementById('auth').style.display = 'block';
@@ -230,14 +293,12 @@ button:hover {
     clearMessages();
   });
 
-  // Clear messages
   function clearMessages() {
     showMessage('regMessage', '');
     showMessage('loginMessage', '');
     showMessage('postMessage', '');
   }
 
-  // Post creation
   document.getElementById('postForm').addEventListener('submit', async e => {
     e.preventDefault();
     const text = document.getElementById('postText').value.trim();
@@ -264,21 +325,40 @@ button:hover {
     }
   });
 
-  // Load posts
   async function loadPosts() {
-    const res = await fetch('/posts');
-    const posts = await res.json();
+  const res = await fetch('/posts');
+  const posts = await res.json();
 
-    const postsDiv = document.getElementById('posts');
-    postsDiv.innerHTML = '';
+  const postsDiv = document.getElementById('posts');
+  postsDiv.innerHTML = '';
 
-    posts.slice().reverse().forEach(post => {
-      const postEl = document.createElement('div');
-      postEl.className = 'post';
-      postEl.innerHTML = `<strong>${post.username}</strong> <em>(${new Date(post.timestamp).toLocaleString()})</em><p>${post.text}</p>`;
-      postsDiv.appendChild(postEl);
-    });
-  }
+  posts.slice().reverse().forEach(post => {
+    let dateStr = 'Data non disponibile';
+    if (post.timestamp) {
+      const dateObj = new Date(post.timestamp);
+      if (!isNaN(dateObj)) {
+        dateStr = dateObj.toLocaleString('it-IT', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+      }
+    }
+
+    const postEl = document.createElement('div');
+    postEl.className = 'post';
+    postEl.innerHTML = `
+      <strong>${post.username}</strong> 
+      <em>${dateStr}</em>
+      <p>${post.text}</p>
+    `;
+    postsDiv.appendChild(postEl);
+  });
+}
+
 </script>
+
 </body>
 </html>
