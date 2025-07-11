@@ -80,8 +80,11 @@ app.get('/posts', (req, res) => {
   res.json(enrichedPosts);
 });
 
+
 const path = require('path');
-app.use(express.static(path.join(__dirname)));
+
+// Servi i file statici dalla cartella 'public'
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Avvia il server
 app.listen(PORT, () => {
