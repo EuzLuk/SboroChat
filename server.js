@@ -9,10 +9,6 @@ const posts = []; // {id, userId, text}
 // Middleware per leggere JSON nel corpo delle richieste
 app.use(express.json());
 
-// Home route semplice
-app.get('/', (req, res) => {
-  res.send('Benvenuto nel primo Facebook!');
-});
 
 // Registrazione utente
 app.post('/register', (req, res) => {
