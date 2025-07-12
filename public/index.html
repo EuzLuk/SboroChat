@@ -215,6 +215,19 @@
 <script>
   let currentUser = null;
 
+checkLoggedIn();
+
+function checkLoggedIn() {
+  const userStr = localStorage.getItem('currentUser');
+  if (userStr) {
+    currentUser = JSON.parse(userStr);
+    document.getElementById('auth').style.display = 'none';
+    document.getElementById('logoutBtn').style.display = 'block';
+    document.getElementById('postSection').style.display = 'block';
+    loadPosts();
+  }
+}
+
   function showMessage(elementId, message, isError = false) {
     const el = document.getElementById(elementId);
     el.textContent = message;
@@ -274,6 +287,7 @@
 
     if (res.ok) {
       currentUser = data.user;
+      localStorage.setItem('currentUser', JSON.stringify(currentUser));
       showMessage('loginMessage', 'Login effettuato con successo.');
       document.getElementById('loginForm').reset();
       document.getElementById('auth').style.display = 'none';
@@ -287,6 +301,7 @@
 
   document.getElementById('logoutBtn').addEventListener('click', () => {
     currentUser = null;
+    localStorage.removeItem('currentUser');
     document.getElementById('auth').style.display = 'block';
     document.getElementById('logoutBtn').style.display = 'none';
     document.getElementById('postSection').style.display = 'none';
