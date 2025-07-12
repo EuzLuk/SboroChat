@@ -1,79 +1,76 @@
 
 const express = require('express');
+const bodyParser = require('body-parser');
+const path = require('path');
 const app = express();
-const PORT = 3000;
 
-// Dati in memoria (simulazione database)
-const users = []; // {id, username, password}
-const posts = []; // {id, userId, text, timestamp}
+app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(express.json());
+const users = [];
+const posts = [];
 
-// Registrazione utente
-app.post('/register', (req, res) => {
-  const { username, password } = req.body;
-  if (!username || !password) {
-    return res.status(400).json({ message: 'Username e password sono obbligatori' });
-  }
-  const existingUser = users.find(u => u.username === username);
-  if (existingUser) {
-    return res.status(400).json({ message: 'Utente già esistente' });
-  }
-  const user = {
-    id: users.length + 1,
-    username,
-    password, // In un progetto reale va criptata!
-  };
-  users.push(user);
-  res.status(201).json({ message: 'Utente registrato', user });
-});
-
-// Login utente
+// login o registrazione
 app.post('/login', (req, res) => {
-  const { username, password } = req.body;
-  const user = users.find(u => u.username === username && u.password === password);
+  const { username } = req.body;
+  if (!username) return res.status(400).json({ message: 'Username richiesto' });
+
+  let user = users.find(u => u.username === username);
   if (!user) {
-    return res.status(401).json({ message: 'Credenziali non valide' });
+    user = { id: users.length+1, username };
+    users.push(user);
   }
-  res.json({ message: 'Login riuscito', user });
+  res.json({ user });
 });
 
-// Creazione di un post
+// crea post di testo
 app.post('/post', (req, res) => {
   const { userId, text } = req.body;
+  if (!text) return res.status(400).json({ message: 'Testo richiesto' });
   const user = users.find(u => u.id === userId);
-  if (!user) {
-    return res.status(400).json({ message: 'Utente non trovato' });
-  }
+  if (!user) return res.status(400).json({ message: 'Utente non trovato' });
+
   const post = {
-    id: posts.length + 1,
+    id: posts.length+1,
     userId,
+    username: user.username,
     text,
+    image: '',
     timestamp: new Date().toISOString()
   };
   posts.push(post);
   res.status(201).json({ message: 'Post creato', post });
 });
 
-// Recupera tutti i post con username e timestamp
+// crea post con immagine casuale
+app.post('/post-random-image', (req, res) => {
+  const { userId } = req.body;
+  const user = users.find(u => u.id === userId);
+  if (!user) return res.status(400).json({ message: 'Utente non trovato' });
+
+  const randomIndex = Math.floor(Math.random() * 10) + 1;
+  const imagePath = `/images/img${randomIndex}.jpg`;
+
+  const post = {
+    id: posts.length+1,
+    userId,
+    username: user.username,
+    text: '',
+    image: imagePath,
+    timestamp: new Date().toISOString()
+  };
+  posts.push(post);
+  res.status(201).json({ message: 'Immagine postata', post });
+});
+
+// restituisce tutti i post
 app.get('/posts', (req, res) => {
-  const detailedPosts = posts.map(post => {
-    const user = users.find(u => u.id === post.userId);
-    return {
-      id: post.id,
-      userId: post.userId,
-      username: user ? user.username : 'Sconosciuto',
-      text: post.text,
-      timestamp: post.timestamp
-    };
-  });
-  res.json(detailedPosts);
+  const enrichedPosts = posts.map(p => ({
+    ...p,
+    username: users.find(u => u.id === p.userId)?.username || 'Sconosciuto'
+  }));
+  res.json(enrichedPosts);
 });
 
-const path = require('path');
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Avvia il server
-app.listen(PORT, () => {
-  console.log(`Server in ascolto su http://localhost:${PORT}`);
-});
+const PORT = 3000;
+app.listen(PORT, () => console.log(`Server avviato su http://localhost:${PORT}`));
