@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="it">
-<head>
+<html lang="it" data-np-autofill-form-type="other" data-np-checked="1" data-np-watching="1"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SboroChat💦</title>
@@ -123,31 +122,53 @@
   }
 </style>
 </head>
-<body>
+<body class="vsc-initialized">
 
 <h1>SboroChat💦</h1>
 
 <div style="text-align:center; margin-bottom:20px;">
-  <img src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQQnymsoaTGhsu_fKcZMoRH14iVqqXUubdpupMHS__7ciTiiR80vB0lzkZpnjDgDZQpAG5RxEz-Q0JWJpForum8jg" 
-       alt="immagine decorativa" 
-       style="max-width:100%; height:auto; border-radius:8px; box-shadow:0 0 10px rgba(0,0,0,0.2);">
+  <img src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQQnymsoaTGhsu_fKcZMoRH14iVqqXUubdpupMHS__7ciTiiR80vB0lzkZpnjDgDZQpAG5RxEz-Q0JWJpForum8jg" alt="immagine decorativa" style="max-width:100%; height:auto; border-radius:8px; box-shadow:0 0 10px rgba(0,0,0,0.2);">
 </div>
 
-<div id="loginSection">
+<div id="loginSection" style="display: none;">
   <input type="text" id="username" placeholder="Username">
   <button id="loginBtn">Login</button>
-  <div id="loginMessage"></div>
+  <div id="loginMessage" style="color: green;"></div>
 </div>
 
-<div id="postSection">
-  <h3>Ciao <span id="currentUser"></span>!</h3>
+<div id="postSection" style="display: block;">
+  <h3>Ciao <span id="currentUser">gino</span>!</h3>
   <textarea id="postText" placeholder="Scrivi qualcosa..." rows="3"></textarea><br>
   <button id="postBtn">Posta</button>
   <button id="schizzaBtn">Schizza un pò</button>
-  <div id="postMessage"></div>
+  <div id="postMessage" style="color: green;">Immagine postata!</div>
 
   <h2>Post recenti</h2>
-  <div id="posts"></div>
+  <div id="posts"><div class="post">
+      <strong>gino</strong> 
+      <em>13/07/2025, 06:01</em><br>
+      <img src="/images/img3.jpg" alt="immagine" style="max-width:150px; height:auto; border-radius:5px;">
+    </div><div class="post">
+      <strong>gino</strong> 
+      <em>13/07/2025, 06:00</em><br>
+      <img src="/images/img8.jpg" alt="immagine" style="max-width:150px; height:auto; border-radius:5px;">
+    </div><div class="post">
+      <strong>gino</strong> 
+      <em>13/07/2025, 06:00</em><br>
+      <img src="/images/img10.jpg" alt="immagine" style="max-width:150px; height:auto; border-radius:5px;">
+    </div><div class="post">
+      <strong>gino</strong> 
+      <em>13/07/2025, 06:00</em><br>
+      <img src="/images/img2.jpg" alt="immagine" style="max-width:150px; height:auto; border-radius:5px;">
+    </div><div class="post">
+      <strong>gino</strong> 
+      <em>13/07/2025, 06:00</em><br>
+      <p>buuu</p>
+    </div><div class="post">
+      <strong>gino</strong> 
+      <em>13/07/2025, 05:59</em><br>
+      <p>ggg</p>
+    </div></div>
 </div>
 
 <script>
@@ -213,6 +234,13 @@ window.addEventListener('load', () => {
   }
 });
 
+async function handleUserNotFound() {
+  currentUser = null;
+  document.getElementById('postSection').style.display = 'none';
+  document.getElementById('loginSection').style.display = 'block';
+  showMessage('loginMessage', 'Sessione scaduta. Effettua di nuovo il login.', true);
+}
+
 document.getElementById('postBtn').addEventListener('click', async () => {
   const text = document.getElementById('postText').value.trim();
   if (!text) return;
@@ -228,6 +256,8 @@ document.getElementById('postBtn').addEventListener('click', async () => {
     document.getElementById('postText').value = '';
     showMessage('postMessage', 'Post creato!');
     loadPosts();
+  } else if (data.message === 'Utente non trovato') {
+    handleUserNotFound();
   } else {
     showMessage('postMessage', data.message, true);
   }
@@ -244,10 +274,13 @@ document.getElementById('schizzaBtn').addEventListener('click', async () => {
   if (res.ok) {
     showMessage('postMessage', 'Immagine postata!');
     loadPosts();
+  } else if (data.message === 'Utente non trovato') {
+    handleUserNotFound();
   } else {
     showMessage('postMessage', data.message, true);
   }
 });
+
 
 async function loadPosts() {
   const res = await fetch('/posts');
@@ -290,4 +323,3 @@ async function loadPosts() {
 
 </body>
 </html>
-
