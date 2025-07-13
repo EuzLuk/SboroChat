@@ -264,64 +264,74 @@ document.getElementById('loginBtn').addEventListener('click', async () => {
 
 
 document.getElementById('postBtn').addEventListener('click', async () => {
-  if (!currentUser) {
-    showMessage('postMessage', 'Devi fare login!', true);
-    return;
-  }
-  const text = document.getElementById('postText').value.trim();
-  if (!text) {
-    showMessage('postMessage', 'Testo vuoto.', true);
-    return;
-  }
+ if (!currentUser) {
+  showMessage('postMessage', 'Devi fare login!', true);
+  return;
+}
+const text = document.getElementById('postText').value.trim();
+if (!text) {
+  showMessage('postMessage', 'Testo vuoto.', true);
+  return;
+}
 
-  try {
-    const res = await fetch('/post', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ userId: currentUser.id, text })
-    });
-    const data = await res.json();
+try {
+  const res = await fetch('/post', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ userId: currentUser.id, text })
+  });
+  const data = await res.json();
 
-    if (res.ok) {
-      showMessage('postMessage', '✅ Testo postato!');
-      document.getElementById('postText').value = '';
-      await loadPosts();
+  if (res.ok) {
+    showMessage('postMessage', '✅ Testo postato!');
+    document.getElementById('postText').value = '';
+    await loadPosts();
+  } else {
+    if (data.message && data.message.toLowerCase().includes('utente non trovato')) {
+      handleUserNotFound();
     } else {
       showMessage('postMessage', data.message || 'Errore.', true);
     }
-  } catch (err) {
-    showMessage('postMessage', 'Errore di rete.', true);
   }
+} catch (err) {
+  showMessage('postMessage', 'Errore di rete.', true);
+}
+
 });
 
 document.getElementById('schizzaBtn').addEventListener('click', async () => {
-  if (!currentUser) {
-    showMessage('postMessage', 'Devi fare login!', true);
-    return;
-  }
+ if (!currentUser) {
+  showMessage('postMessage', 'Devi fare login!', true);
+  return;
+}
 
-  try {
-    const res = await fetch('/post-random-image', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ userId: currentUser.id })
-    });
-    const data = await res.json();
+try {
+  const res = await fetch('/post-random-image', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ userId: currentUser.id })
+  });
+  const data = await res.json();
 
-    if (res.ok) {
-      showMessage('postMessage', '✅ Immagine postata!');
-      await loadPosts();
+  if (res.ok) {
+    showMessage('postMessage', '✅ Immagine postata!');
+    await loadPosts();
 
-      setTimeout(() => {
-        animateLastPost();
-      }, 50);
+    setTimeout(() => {
+      animateLastPost();
+    }, 50);
 
+  } else {
+    if (data.message && data.message.toLowerCase().includes('utente non trovato')) {
+      handleUserNotFound();
     } else {
       showMessage('postMessage', data.message || 'Errore.', true);
     }
-  } catch (err) {
-    showMessage('postMessage', 'Errore di rete.', true);
   }
+} catch (err) {
+  showMessage('postMessage', 'Errore di rete.', true);
+}
+
 });
 
 async function loadPosts() {
@@ -426,16 +436,26 @@ function animateLastPost() {
 }
 
 function playSplatterSound() {
-  const audio = new Audio('/sounds/splatter.mp3');
+  const audio = new Audio("/sound/splash.mp3");
   audio.volume = 0.3;
   audio.play();
 }
+
+function handleUserNotFound() {
+  currentUser = null;
+  localStorage.removeItem('currentUser');
+  document.getElementById('postSection').style.display = 'none';
+  document.getElementById('loginSection').style.display = 'block';
+  showMessage('loginMessage', 'Utente non trovato. Effettua il login per accedere.', true);
+}
+
 
 function showMessage(targetId, message, isError = false) {
   const el = document.getElementById(targetId);
   el.textContent = message;
   el.style.color = isError ? 'red' : 'limegreen';
 }
+
 </script>
 
 
