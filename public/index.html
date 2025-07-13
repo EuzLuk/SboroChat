@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html lang="it" data-np-autofill-form-type="other" data-np-checked="1" data-np-watching="1"><head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<html lang="it">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>SboroChat💦</title>
 <style>
   body {
@@ -70,6 +71,7 @@
     background-color: #fefefe;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 191, 255, 0.1);
+    position: relative; /* importante per posizionare splatter */
   }
 
   .post strong {
@@ -120,170 +122,214 @@
   #posts {
     margin-top: 20px;
   }
+
+.splatter {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  overflow: visible;
+  z-index: 10;
+}
+
+.chiazza {
+  position: absolute;
+  background: radial-gradient(circle at center, #fff 40%, transparent 80%);
+  border-radius: 50% 40% 60% 50% / 50% 60% 40% 50%;
+  filter: brightness(1.4) saturate(1.2);
+  opacity: 0.9;
+  animation: chiazzaExpands 0.3s ease forwards;
+}
+
+.macchia {
+  position: absolute;
+  background: radial-gradient(circle at center, #fff 70%, transparent 90%);
+  border-radius: 45% 60% 40% 55% / 55% 40% 60% 45%;
+  filter: brightness(1.5) saturate(1.4);
+  opacity: 0.85;
+  animation: macchiaScatter 0.3s ease forwards;
+}
+
+@keyframes chiazzaExpands {
+  0% {
+    transform: scale(0.1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+}
+
+@keyframes macchiaScatter {
+  0% {
+    transform: translate(0,0) scale(0.2);
+    opacity: 0.85;
+  }
+  100% {
+    transform: translate(var(--x), var(--y)) scale(1);
+    opacity: 0.8;
+  }
+}
+
+@keyframes dripDown {
+  0% {
+    transform: translateY(0);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(100px);
+    opacity: 0;
+  }
+}
+
 </style>
 </head>
-<body class="vsc-initialized">
+<body>
 
 <h1>SboroChat💦</h1>
 
 <div style="text-align:center; margin-bottom:20px;">
-  <img src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQQnymsoaTGhsu_fKcZMoRH14iVqqXUubdpupMHS__7ciTiiR80vB0lzkZpnjDgDZQpAG5RxEz-Q0JWJpForum8jg" alt="immagine decorativa" style="max-width:100%; height:auto; border-radius:8px; box-shadow:0 0 10px rgba(0,0,0,0.2);">
+  <img src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQQnymsoaTGhsu_fKcZMoRH14iVqqXUubdpupMHS__7ciTiiR80vB0lzkZpnjDgDZQpAG5RxEz-Q0JWJpForum8jg" 
+       alt="immagine decorativa" 
+       style="max-width:100%; height:auto; border-radius:8px; box-shadow:0 0 10px rgba(0,0,0,0.2);">
 </div>
 
-<div id="loginSection" style="display: none;">
-  <input type="text" id="username" placeholder="Username">
+<div id="loginSection">
+  <input type="text" id="username" placeholder="Username" />
   <button id="loginBtn">Login</button>
-  <div id="loginMessage" style="color: green;"></div>
+  <div id="loginMessage"></div>
 </div>
 
-<div id="postSection" style="display: block;">
-  <h3>Ciao <span id="currentUser">gino</span>!</h3>
-  <textarea id="postText" placeholder="Scrivi qualcosa..." rows="3"></textarea><br>
+<div id="postSection">
+  <h3>Ciao <span id="currentUser"></span>!</h3>
+  <textarea id="postText" placeholder="Scrivi qualcosa..." rows="3"></textarea><br />
   <button id="postBtn">Posta</button>
   <button id="schizzaBtn">Schizza un pò</button>
-  <div id="postMessage" style="color: green;">Immagine postata!</div>
+  <div id="postMessage"></div>
 
   <h2>Post recenti</h2>
-  <div id="posts"><div class="post">
-      <strong>gino</strong> 
-      <em>13/07/2025, 06:01</em><br>
-      <img src="/images/img3.jpg" alt="immagine" style="max-width:150px; height:auto; border-radius:5px;">
-    </div><div class="post">
-      <strong>gino</strong> 
-      <em>13/07/2025, 06:00</em><br>
-      <img src="/images/img8.jpg" alt="immagine" style="max-width:150px; height:auto; border-radius:5px;">
-    </div><div class="post">
-      <strong>gino</strong> 
-      <em>13/07/2025, 06:00</em><br>
-      <img src="/images/img10.jpg" alt="immagine" style="max-width:150px; height:auto; border-radius:5px;">
-    </div><div class="post">
-      <strong>gino</strong> 
-      <em>13/07/2025, 06:00</em><br>
-      <img src="/images/img2.jpg" alt="immagine" style="max-width:150px; height:auto; border-radius:5px;">
-    </div><div class="post">
-      <strong>gino</strong> 
-      <em>13/07/2025, 06:00</em><br>
-      <p>buuu</p>
-    </div><div class="post">
-      <strong>gino</strong> 
-      <em>13/07/2025, 05:59</em><br>
-      <p>ggg</p>
-    </div></div>
+  <div id="posts"></div>
 </div>
 
 <script>
 let currentUser = null;
 
-function showMessage(id, message, isError=false) {
-  const el = document.getElementById(id);
-  el.textContent = message;
-  el.style.color = isError ? 'red' : 'green';
-}
-
-function saveUserToStorage(user) {
-  localStorage.setItem('currentUser', JSON.stringify(user));
-}
-
-function loadUserFromStorage() {
-  const userStr = localStorage.getItem('currentUser');
-  if (!userStr) return null;
-  try {
-    return JSON.parse(userStr);
-  } catch {
-    return null;
+window.addEventListener('DOMContentLoaded', () => {
+  // Controlla se utente salvato in localStorage
+  const savedUser = localStorage.getItem('currentUser');
+  if (savedUser) {
+    currentUser = JSON.parse(savedUser);
+    document.getElementById('loginSection').style.display = 'none';
+    document.getElementById('postSection').style.display = 'block';
+    document.getElementById('currentUser').textContent = currentUser.username;
+    showMessage('postMessage', `Bentornato ${currentUser.username}!`);
+    loadPosts();
   }
-}
+});
 
-function clearUserStorage() {
-  localStorage.removeItem('currentUser');
-}
-
-function showLoggedInUI(user) {
-  currentUser = user;
-  document.getElementById('loginSection').style.display = 'none';
-  document.getElementById('postSection').style.display = 'block';
-  document.getElementById('currentUser').textContent = currentUser.username;
-  showMessage('loginMessage', '');
-  loadPosts();
-}
 
 document.getElementById('loginBtn').addEventListener('click', async () => {
   const username = document.getElementById('username').value.trim();
-  if (!username) return;
+  if (!username) {
+    showMessage('loginMessage', 'Username richiesto.', true);
+    return;
+  }
 
-  const res = await fetch('/login', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({ username })
-  });
-  const data = await res.json();
+  try {
+    const res = await fetch('/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username })
+    });
+    const data = await res.json();
 
-  if (res.ok) {
-    saveUserToStorage(data.user);  // SALVO in localStorage
-    showLoggedInUI(data.user);
-  } else {
-    showMessage('loginMessage', data.message, true);
+    if (res.ok) {
+      currentUser = data.user;
+      // Salvo su localStorage per persistenza
+      localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+      document.getElementById('loginSection').style.display = 'none';
+      document.getElementById('postSection').style.display = 'block';
+      document.getElementById('currentUser').textContent = currentUser.username;
+      showMessage('postMessage', `Bentornato ${currentUser.username}!`);
+      await loadPosts();
+    } else {
+      showMessage('loginMessage', data.message || 'Errore.', true);
+    }
+  } catch (err) {
+    showMessage('loginMessage', 'Errore di rete.', true);
   }
 });
 
-// All'avvio della pagina, provo a caricare l'utente salvato
-window.addEventListener('load', () => {
-  const storedUser = loadUserFromStorage();
-  if (storedUser) {
-    showLoggedInUI(storedUser);
-  }
-});
-
-async function handleUserNotFound() {
-  currentUser = null;
-  document.getElementById('postSection').style.display = 'none';
-  document.getElementById('loginSection').style.display = 'block';
-  showMessage('loginMessage', 'Sessione scaduta. Effettua di nuovo il login.', true);
-}
 
 document.getElementById('postBtn').addEventListener('click', async () => {
+  if (!currentUser) {
+    showMessage('postMessage', 'Devi fare login!', true);
+    return;
+  }
   const text = document.getElementById('postText').value.trim();
-  if (!text) return;
+  if (!text) {
+    showMessage('postMessage', 'Testo vuoto.', true);
+    return;
+  }
 
-  const res = await fetch('/post', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({ userId: currentUser.id, text })
-  });
-  const data = await res.json();
+  try {
+    const res = await fetch('/post', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ userId: currentUser.id, text })
+    });
+    const data = await res.json();
 
-  if (res.ok) {
-    document.getElementById('postText').value = '';
-    showMessage('postMessage', 'Post creato!');
-    loadPosts();
-  } else if (data.message === 'Utente non trovato') {
-    handleUserNotFound();
-  } else {
-    showMessage('postMessage', data.message, true);
+    if (res.ok) {
+      showMessage('postMessage', '✅ Testo postato!');
+      document.getElementById('postText').value = '';
+      await loadPosts();
+    } else {
+      showMessage('postMessage', data.message || 'Errore.', true);
+    }
+  } catch (err) {
+    showMessage('postMessage', 'Errore di rete.', true);
   }
 });
 
 document.getElementById('schizzaBtn').addEventListener('click', async () => {
-  const res = await fetch('/post-random-image', {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({ userId: currentUser.id })
-  });
-  const data = await res.json();
+  if (!currentUser) {
+    showMessage('postMessage', 'Devi fare login!', true);
+    return;
+  }
 
-  if (res.ok) {
-    showMessage('postMessage', 'Immagine postata!');
-    loadPosts();
-  } else if (data.message === 'Utente non trovato') {
-    handleUserNotFound();
-  } else {
-    showMessage('postMessage', data.message, true);
+  try {
+    const res = await fetch('/post-random-image', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ userId: currentUser.id })
+    });
+    const data = await res.json();
+
+    if (res.ok) {
+      showMessage('postMessage', '✅ Immagine postata!');
+      await loadPosts();
+
+      setTimeout(() => {
+        animateLastPost();
+      }, 50);
+
+    } else {
+      showMessage('postMessage', data.message || 'Errore.', true);
+    }
+  } catch (err) {
+    showMessage('postMessage', 'Errore di rete.', true);
   }
 });
 
-
 async function loadPosts() {
   const res = await fetch('/posts');
+  if (!res.ok) {
+    showMessage('postMessage', 'Errore nel caricamento dei post', true);
+    return;
+  }
   const data = await res.json();
   const postsDiv = document.getElementById('posts');
   postsDiv.innerHTML = '';
@@ -318,8 +364,81 @@ async function loadPosts() {
 
     postsDiv.appendChild(postEl);
   });
+
+  return Promise.resolve();
+}
+
+function animateLastPost() {
+  const postsDiv = document.getElementById('posts');
+  if (!postsDiv.lastChild) return;
+
+  const lastPost = postsDiv.lastChild;
+  const splatter = document.createElement('div');
+  splatter.className = 'splatter';
+
+  const postRect = lastPost.getBoundingClientRect();
+  const postsRect = postsDiv.getBoundingClientRect();
+  const offsetX = postRect.left - postsRect.left;
+  const offsetY = postRect.top - postsRect.top;
+
+  for (let i = 0; i < 5; i++) {
+    const chiazza = document.createElement('div');
+    chiazza.className = 'chiazza';
+
+    const size = 20 + Math.random() * 30;
+    chiazza.style.width = size + 'px';
+    chiazza.style.height = size + 'px';
+
+    const x = offsetX + Math.random() * postRect.width;
+    const y = offsetY + Math.random() * postRect.height;
+
+    chiazza.style.left = x + 'px';
+    chiazza.style.top = y + 'px';
+
+    splatter.appendChild(chiazza);
+
+    const macchia = document.createElement('div');
+    macchia.className = 'macchia';
+
+    const mSize = 10 + Math.random() * 15;
+    macchia.style.width = mSize + 'px';
+    macchia.style.height = mSize + 'px';
+
+    const dx = (Math.random() - 0.5) * 100;
+    const dy = (Math.random() - 0.5) * 100;
+    macchia.style.setProperty('--x', dx + 'px');
+    macchia.style.setProperty('--y', dy + 'px');
+
+    macchia.style.left = x + 'px';
+    macchia.style.top = y + 'px';
+
+    splatter.appendChild(macchia);
+  }
+
+  lastPost.style.position = 'relative';
+  lastPost.appendChild(splatter);
+
+  setTimeout(() => {
+    splatter.remove();
+  }, 1000);
+
+  playSplatterSound();
+}
+
+function playSplatterSound() {
+  const audio = new Audio('/sounds/splatter.mp3');
+  audio.volume = 0.3;
+  audio.play();
+}
+
+function showMessage(targetId, message, isError = false) {
+  const el = document.getElementById(targetId);
+  el.textContent = message;
+  el.style.color = isError ? 'red' : 'limegreen';
 }
 </script>
+
+
 
 </body>
 </html>
