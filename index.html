@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SboroChat💦</title>
+<style>
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    max-width: 600px;
+    margin: 30px auto;
+    background-color: #f9f9f9;
+    color: #333;
+  }
+
+  h1 {
+    text-align: center;
+    color: #00bfff;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    text-shadow: 0 0 5px #00bfff;
+  }
+
+  form, #loginSection, #postSection {
+    margin-bottom: 25px;
+    background: #fff;
+    border: 2px solid #a8d0ff;
+    border-radius: 10px;
+    padding: 15px 20px;
+    box-shadow: 0 0 15px rgba(0, 191, 255, 0.2);
+  }
+
+  input, textarea, button {
+    padding: 10px;
+    margin-top: 8px;
+    width: 100%;
+    border-radius: 5px;
+    border: 1.5px solid #a8d0ff;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #333;
+    background-color: #fff;
+    transition: border-color 0.3s ease;
+  }
+
+  input:focus, textarea:focus {
+    outline: none;
+    border-color: #00bfff;
+    box-shadow: 0 0 8px #00bfff;
+  }
+
+  button {
+    cursor: pointer;
+    background-color: #00bfff;
+    color: #fff;
+    font-weight: 700;
+    border: none;
+    transition: background-color 0.3s ease;
+  }
+
+  button:hover {
+    background-color: #008fcc;
+  }
+
+  .post {
+    border-bottom: 1.5px solid #a8d0ff;
+    margin-bottom: 18px;
+    padding: 12px;
+    background-color: #fefefe;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 191, 255, 0.1);
+    position: relative; /* importante per posizionare splatter */
+  }
+
+  .post strong {
+    color: #00bfff;
+    font-weight: 700;
+  }
+
+  .post em {
+    color: #666;
+    font-size: 0.85rem;
+    margin-left: 8px;
+  }
+
+  .post p {
+    color: #222;
+    margin-top: 6px;
+    font-size: 1rem;
+    line-height: 1.4;
+  }
+
+  #postSection {
+    position: relative;
+    background-image: url('https://www.ilsussidiario.net/wp-content/uploads/2023/04/30/gianni_sperti_2023_verissimo.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 10px;
+    padding: 15px;
+    color: white;
+    overflow: hidden;
+    display: none;
+  }
+
+  #postSection::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 0;
+    border-radius: 10px;
+  }
+
+  #postSection > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  #posts {
+    margin-top: 20px;
+  }
+
+.splatter {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  overflow: visible;
+  z-index: 10;
+}
+
+.chiazza {
+  position: absolute;
+  background: radial-gradient(circle at center, #fff 40%, transparent 80%);
+  border-radius: 50% 40% 60% 50% / 50% 60% 40% 50%;
+  filter: brightness(1.4) saturate(1.2);
+  opacity: 0.9;
+  animation: chiazzaExpands 0.3s ease forwards;
+}
+
+.macchia {
+  position: absolute;
+  background: radial-gradient(circle at center, #fff 70%, transparent 90%);
+  border-radius: 45% 60% 40% 55% / 55% 40% 60% 45%;
+  filter: brightness(1.5) saturate(1.4);
+  opacity: 0.85;
+  animation: macchiaScatter 0.3s ease forwards;
+}
+
+@keyframes chiazzaExpands {
+  0% {
+    transform: scale(0.1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.9;
+  }
+}
+
+@keyframes macchiaScatter {
+  0% {
+    transform: translate(0,0) scale(0.2);
+    opacity: 0.85;
+  }
+  100% {
+    transform: translate(var(--x), var(--y)) scale(1);
+    opacity: 0.8;
+  }
+}
+
+@keyframes dripDown {
+  0% {
+    transform: translateY(0);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(100px);
+    opacity: 0;
+  }
+}
+
+</style>
+</head>
+<body>
+
+<h1>SboroChat💦</h1>
+
+<div style="text-align:center; margin-bottom:20px;">
+  <img src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQQnymsoaTGhsu_fKcZMoRH14iVqqXUubdpupMHS__7ciTiiR80vB0lzkZpnjDgDZQpAG5RxEz-Q0JWJpForum8jg" 
+       alt="immagine decorativa" 
+       style="max-width:100%; height:auto; border-radius:8px; box-shadow:0 0 10px rgba(0,0,0,0.2);">
+</div>
+
+<div id="loginSection">
+  <input type="text" id="username" placeholder="Username" />
+  <button id="loginBtn">Login</button>
+  <div id="loginMessage"></div>
+</div>
+
+<div id="postSection">
+  <h3>Ciao <span id="currentUser"></span>!</h3>
+  <textarea id="postText" placeholder="Scrivi qualcosa..." rows="3"></textarea><br />
+  <button id="postBtn">Posta</button>
+  <button id="schizzaBtn">Schizza un pò</button>
+  <div id="postMessage"></div>
+
+  <h2>Post recenti</h2>
+  <div id="posts"></div>
+</div>
+
+<script>
+let currentUser = null;
+
+window.addEventListener('DOMContentLoaded', () => {
+  });
+
+
+document.getElementById('loginBtn').addEventListener('click', async () => {
+  const username = document.getElementById('username').value.trim();
+  if (!username) {
+    showMessage('loginMessage', 'Username richiesto.', true);
+    return;
+  }
+
+  try {
+    const res = await fetch('/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username })
+    });
+    const data = await res.json();
+
+    if (res.ok) {
+      currentUser = data.user;
+      
+      document.getElementById('loginSection').style.display = 'none';
+      document.getElementById('postSection').style.display = 'block';
+      document.getElementById('currentUser').textContent = currentUser.username;
+      showMessage('postMessage', `Bentornato ${currentUser.username}!`);
+      await loadPosts();
+    } else {
+      showMessage('loginMessage', data.message || 'Errore.', true);
+    }
+  } catch (err) {
+    showMessage('loginMessage', 'Errore di rete.', true);
+  }
+});
+
+
+document.getElementById('postBtn').addEventListener('click', async () => {
+ if (!currentUser) {
+  showMessage('postMessage', 'Devi fare login!', true);
+  return;
+}
+const text = document.getElementById('postText').value.trim();
+if (!text) {
+  showMessage('postMessage', 'Testo vuoto.', true);
+  return;
+}
+
+try {
+  const res = await fetch('/post', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ userId: currentUser.id, text })
+  });
+  const data = await res.json();
+
+  if (res.ok) {
+    showMessage('postMessage', '✅ Testo postato!');
+    document.getElementById('postText').value = '';
+    await loadPosts();
+  } else {
+    if (data.message && data.message.toLowerCase().includes('utente non trovato')) {
+      handleUserNotFound();
+    } else {
+      showMessage('postMessage', data.message || 'Errore.', true);
+    }
+  }
+} catch (err) {
+  showMessage('postMessage', 'Errore di rete.', true);
+}
+
+});
+
+document.getElementById('schizzaBtn').addEventListener('click', async () => {
+ if (!currentUser) {
+  showMessage('postMessage', 'Devi fare login!', true);
+  return;
+}
+
+try {
+  const res = await fetch('/post-random-image', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({ userId: currentUser.id })
+  });
+  const data = await res.json();
+
+  if (res.ok) {
+    showMessage('postMessage', '✅ Immagine postata!');
+    await loadPosts();
+
+    setTimeout(() => {
+      animateLastPost();
+    }, 50);
+
+  } else {
+    if (data.message && data.message.toLowerCase().includes('utente non trovato')) {
+      handleUserNotFound();
+    } else {
+      showMessage('postMessage', data.message || 'Errore.', true);
+    }
+  }
+} catch (err) {
+  showMessage('postMessage', 'Errore di rete.', true);
+}
+
+});
+
+async function loadPosts() {
+  const res = await fetch('/posts');
+  if (!res.ok) {
+    showMessage('postMessage', 'Errore nel caricamento dei post', true);
+    return;
+  }
+  const data = await res.json();
+  const postsDiv = document.getElementById('posts');
+  postsDiv.innerHTML = '';
+
+  data.slice().reverse().forEach(post => {
+    const postEl = document.createElement('div');
+    postEl.className = 'post';
+
+    let dateStr = 'Data non disponibile';
+    if (post.timestamp) {
+      const dateObj = new Date(post.timestamp);
+      if (!isNaN(dateObj)) {
+        dateStr = dateObj.toLocaleString('it-IT', {
+          year: 'numeric', month: '2-digit', day: '2-digit',
+          hour: '2-digit', minute: '2-digit'
+        });
+      }
+    }
+
+    let content = '';
+    if (post.text) {
+      content = `<p>${post.text}</p>`;
+    } else if (post.image) {
+      content = `<img src="${post.image}" alt="immagine" style="max-width:150px; height:auto; border-radius:5px;">`;
+    }
+
+    postEl.innerHTML = `
+      <strong>${post.username}</strong> 
+      <em>${dateStr}</em><br>
+      ${content}
+    `;
+
+    postsDiv.appendChild(postEl);
+  });
+
+  return Promise.resolve();
+}
+
+function animateLastPost() {
+  const postsDiv = document.getElementById('posts');
+  if (!postsDiv.lastChild) return;
+
+  const lastPost = postsDiv.lastChild;
+  const splatter = document.createElement('div');
+  splatter.className = 'splatter';
+
+  const postRect = lastPost.getBoundingClientRect();
+  const postsRect = postsDiv.getBoundingClientRect();
+  const offsetX = postRect.left - postsRect.left;
+  const offsetY = postRect.top - postsRect.top;
+
+  for (let i = 0; i < 5; i++) {
+    const chiazza = document.createElement('div');
+    chiazza.className = 'chiazza';
+
+    const size = 20 + Math.random() * 30;
+    chiazza.style.width = size + 'px';
+    chiazza.style.height = size + 'px';
+
+    const x = offsetX + Math.random() * postRect.width;
+    const y = offsetY + Math.random() * postRect.height;
+
+    chiazza.style.left = x + 'px';
+    chiazza.style.top = y + 'px';
+
+    splatter.appendChild(chiazza);
+
+    const macchia = document.createElement('div');
+    macchia.className = 'macchia';
+
+    const mSize = 10 + Math.random() * 15;
+    macchia.style.width = mSize + 'px';
+    macchia.style.height = mSize + 'px';
+
+    const dx = (Math.random() - 0.5) * 100;
+    const dy = (Math.random() - 0.5) * 100;
+    macchia.style.setProperty('--x', dx + 'px');
+    macchia.style.setProperty('--y', dy + 'px');
+
+    macchia.style.left = x + 'px';
+    macchia.style.top = y + 'px';
+
+    splatter.appendChild(macchia);
+  }
+
+  lastPost.style.position = 'relative';
+  lastPost.appendChild(splatter);
+
+  setTimeout(() => {
+    splatter.remove();
+  }, 1000);
+
+  playSplatterSound();
+}
+
+function playSplatterSound() {
+  const audio = new Audio("/sound/splash.mp3");
+  audio.volume = 0.3;
+  audio.play();
+}
+
+function handleUserNotFound() {
+  currentUser = null;
+  localStorage.removeItem('currentUser');
+  document.getElementById('postSection').style.display = 'none';
+  document.getElementById('loginSection').style.display = 'block';
+  showMessage('loginMessage', 'Utente non trovato. Effettua il login per accedere.', true);
+}
+
+
+function showMessage(targetId, message, isError = false) {
+  const el = document.getElementById(targetId);
+  el.textContent = message;
+  el.style.color = isError ? 'red' : 'limegreen';
+}
+
+</script>
+
+
+
+</body>
+</html>
